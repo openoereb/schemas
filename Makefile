@@ -1,4 +1,4 @@
-URL = http://schemas.geo.admin.ch/V_D/OeREB/0.9
+URL = http://schemas.geo.admin.ch/V_D/OeREB/1.0
 
 SCHEMA_FILES = Extract.xsd \
 	ExtractData.xsd \

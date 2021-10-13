@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns="http://schemas.geo.admin.ch/swisstopo/OeREBK/15/Extract"
-  xmlns:data="http://schemas.geo.admin.ch/swisstopo/OeREBK/15/ExtractData"
+  xmlns="http://schemas.geo.admin.ch/V_D/OeREB/1.0/Extract"
+  xmlns:data="http://schemas.geo.admin.ch/V_D/OeREB/1.0/ExtractData"
   targetNamespace=
-  "http://schemas.geo.admin.ch/swisstopo/OeREBK/15/Extract"
+  "http://schemas.geo.admin.ch/V_D/OeREB/1.0/Extract"
   elementFormDefault="qualified" attributeFormDefault="unqualified"
-  version="0.8"
+  version="1.0.1"
 >
   <xsd:import namespace=
-"http://schemas.geo.admin.ch/swisstopo/OeREBK/15/ExtractData"
+    "http://schemas.geo.admin.ch/V_D/OeREB/1.0/ExtractData"
 schemaLocation="ExtractData.xsd"/>
 
   <xsd:simpleType name="FlavourType">
@@ -28,14 +28,12 @@ schemaLocation="ExtractData.xsd"/>
               <xsd:element name="cadasterOrganisationName" type="xsd:normalizedString"/>
               <xsd:element name="dataownerNameCadastralSurveying" type="xsd:normalizedString"/> 
               <xsd:element name="transferFromSourceCadastralSurveying" type="xsd:dateTime"/>
-              <xsd:element name="datasource">
+              <xsd:element name="datasource" minOccurs="0" maxOccurs="unbounded">
                 <xsd:complexType>
                   <xsd:sequence>
                     <xsd:element name="topic" type="data:Theme"/>
                     <xsd:element name="dataownerName" type="xsd:normalizedString"/> 
                     <xsd:element name="transferFromSource" type="xsd:dateTime"/>
-
-
                   </xsd:sequence>
                 </xsd:complexType>
               </xsd:element>
@@ -51,7 +49,7 @@ schemaLocation="ExtractData.xsd"/>
   
   <xsd:element name="GetEGRIDResponse" type="GetEGRIDResponseType"/>
   <xsd:complexType name="GetEGRIDResponseType">
-    <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
       <xsd:element name="egrid" type="xsd:token"/>
       <xsd:element name="number" type="xsd:token"/>
       <xsd:element name="identDN" type="xsd:token"/>
