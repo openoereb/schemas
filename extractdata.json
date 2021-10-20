@@ -1,7 +1,7 @@
 {
 	"$schema": "http://json-schema.org/draft-04/schema#",
 	"$id": "http://schemas.geo.admin.ch/V_D/OeREB/2.0/extractdata.json",
-	"fileVersion": "2.0.0",
+	"fileVersion": "2.0.1",
 	"type": "object",
 	"anyOf": [{
 		"$ref": "#/definitions/Extract"
@@ -685,7 +685,7 @@
 				"PLRCadastreAuthority": {
 					"$ref": "#/definitions/Office"
 				},
-				"UpdateDateOS": {
+				"UpdateDateCS": {
 					"$ref": "#/definitions/dateTime"
 				}
 			}
