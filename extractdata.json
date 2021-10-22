@@ -913,7 +913,9 @@
 				},
 				"GeneralInformation": {
 					"type": "array",
-					"$ref": "#/definitions/MultilingualMText",
+					"items": {
+						"$ref": "#/definitions/MultilingualMText"
+					},
 					"minItems": 0
 				},
 				"Glossary": {
