@@ -912,7 +912,9 @@
 					"maxLength": 50
 				},
 				"GeneralInformation": {
-					"$ref": "#/definitions/MultilingualMText"
+					"type": "array",
+					"$ref": "#/definitions/MultilingualMText",
+					"minItems": 0
 				},
 				"Glossary": {
 					"type": "array",
