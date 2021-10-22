@@ -1,11 +1,8 @@
 {
 	"$schema": "http://json-schema.org/draft-04/schema#",
-	"$id": "http://schemas.geo.admin.ch/V_D/OeREB/2.0/extractdata.json",
+	"$id": "http://schemas.geo.admin.ch/V_D/OeREB/2.0/file:///home/kalle/projects/schemas/extractdata.json",
 	"fileVersion": "2.0.1",
 	"type": "object",
-	"anyOf": [{
-		"$ref": "#/definitions/Extract"
-	}],
 	"definitions": {
 		"base64Binary": {
 			"pattern": "([A-Za-z0-9]{4})+={0,2}"
@@ -33,7 +30,11 @@
 				"Text": {
 					"type": "string"
 				}
-			}
+			},
+			"required":[
+				"Language",
+				"Text"
+			]
 		},
 		"LocalisedText": {
 			"type": "object",
@@ -44,7 +45,11 @@
 				"Text": {
 					"type": "string"
 				}
-			}
+			},
+			"required":[
+				"Language",
+				"Text"
+			]
 		},
 		"LocalisedUri": {
 			"type": "object",
@@ -55,7 +60,11 @@
 				"Text": {
 					"$ref": "#/definitions/anyURI"
 				}
-			}
+			},
+			"required":[
+				"Language",
+				"Text"
+			]
 		},
 		"LocalisedBlob": {
 			"type": "object",
@@ -66,7 +75,11 @@
 				"Blob": {
 					"$ref": "#/definitions/base64Binary"
 				}
-			}
+			},
+			"required":[
+				"Language",
+				"Blob"
+			]
 		},
 		"MultilingualMText": {
 			"type": "array",
@@ -105,9 +118,14 @@
 				"Text": {
 					"$ref": "#/definitions/MultilingualText"
 				}
-			}
+			},
+			"required":[
+				"Code",
+				"Text"
+			]
 		},
 		"RealEstateTypeCode": {
+			"type": "string",
 			"enum": [
 				"RealEstate",
 				"Distinct_and_permanent_rights.BuildingRight",
@@ -118,6 +136,7 @@
 			]
 		},
 		"CantonCode": {
+			"type": "string",
 			"enum": [
 				"ZH",
 				"BE",
@@ -154,6 +173,7 @@
 			"maximum": 9999
 		},
 		"LanguageCode": {
+			"type": "string",
 			"enum": [
 				"de",
 				"fr",
@@ -181,72 +201,167 @@
 			"items": {
 				"type": "number"
 			},
-			"minItems": 2
+			"minItems": 2,
+			"maxItems": 3
 		},
 		"positionArray": {
 			"type": "array",
-			"items": { "$ref": "#/definitions/position" }
-		},		
+			"items": {
+				"$ref": "#/definitions/position"
+			}
+		},
 		"PointPropertyType": {
 			"type": "object",
 			"properties": {
-				"type": { "enum": [ "Point" ] },
-				"coordinates": { "$ref": "#/definitions/position" },
+				"type": {
+					"enum": [
+						"Point"
+					]
+				},
+				"coordinates": {
+					"$ref": "#/definitions/position"
+				},
 				"crs": {
 					"type": "string"
 				}
-			}
+			},
+			"required":[
+				"type",
+				"coordinates",
+				"crs"
+			]
 		},
 		"CurvePropertyType": {
 			"type": "object",
 			"properties": {
-				"type": { "enum": [ "LineString","CompoundCurve" ] },
-				"coordinates": { "$ref": "#/definitions/positionArray" },
+				"type": {
+					"type": "string",
+					"enum": [
+						"LineString",
+						"CompoundCurve"
+					]
+				},
 				"crs": {
 					"type": "string"
-				},
-				"isosqlmmwkb": {
-					"$ref": "#/definitions/base64Binary"
 				}
-			}
+			},
+			"required":[
+				"type",
+				"crs"
+			],
+			"oneOf":[
+				{
+					"properties": {
+						"coordinates": {
+							"$ref": "#/definitions/positionArray"
+						}
+					},
+					"required": [
+						"coordinates"
+					]
+				}, {
+					"properties": {
+						"isosqlmmwkb": {
+							"$ref": "#/definitions/base64Binary"
+						}
+					},
+					"required": [
+						"isosqlmmwkb"
+					]
+				}
+			]
 		},
 		"SurfacePropertyType": {
 			"type": "object",
 			"properties": {
-				"type": { "enum": [ "Polygon" ,"CurvePolygon"] },
-				"coordinates": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/positionArray" },
-					"minItems": 1
+				"type": {
+					"type": "string",
+					"enum": [
+						"Polygon",
+						"CurvePolygon"
+					]
 				},
 				"crs": {
 					"type": "string"
-				},
-				"isosqlmmwkb": {
-					"$ref": "#/definitions/base64Binary"
 				}
-			}
+			},
+			"required":[
+				"type",
+				"crs"
+			],
+			"oneOf":[
+				{
+					"properties": {
+						"coordinates": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/positionArray"
+							},
+							"minItems": 1
+						}
+					},
+					"required": [
+						"coordinates"
+					]
+				}, {
+					"properties": {
+						"isosqlmmwkb": {
+							"$ref": "#/definitions/base64Binary"
+						}
+					},
+					"required": [
+						"isosqlmmwkb"
+					]
+				}
+			]
 		},
 		"MultiSurface": {
 			"type": "object",
 			"properties": {
-				"type": { "enum": [ "MultiPolygon","MultiCurvePolygon" ] },
-				"coordinates": {
-					"type": "array",
-					"items": {  
-						"type": "array",
-						"items": { "$ref": "#/definitions/positionArray" },
-						"minItems": 1
-					},
-					"minItems": 1
+				"type": {
+					"type": "string",
+					"enum": [
+						"MultiPolygon",
+						"MultiCurvePolygon"
+					]
 				},
 				"crs": {
 					"type": "string"
-				},
-				"isosqlmmwkb": {
-					"$ref": "#/definitions/base64Binary"
 				}
-			}
+			},
+			"required":[
+				"type",
+				"crs"
+			],
+			"oneOf":[
+				{
+					"properties": {
+						"coordinates": {
+							"type": "array",
+							"items": {
+								"type": "array",
+								"items": {
+									"$ref": "#/definitions/positionArray"
+								},
+								"minItems": 1
+							},
+							"minItems": 1
+						}
+					},
+					"required": [
+						"coordinates"
+					]
+				}, {
+					"properties": {
+						"isosqlmmwkb": {
+							"$ref": "#/definitions/base64Binary"
+						}
+					},
+					"required": [
+						"isosqlmmwkb"
+					]
+				}
+			]
 		},
 		"Theme": {
 			"type": "object",
@@ -260,7 +375,11 @@
 				"Text": {
 					"$ref": "#/definitions/MultilingualText"
 				}
-			}
+			},
+			"required":[
+				"Code",
+				"Text"
+			]
 		},
 		"ThemeCode": {
 			"pattern": "(ch.[a-zA-Z][a-zA-Z0-9]*)|(ch.[A-Z]{2}.[a-zA-Z][a-zA-Z0-9]*)|(ch.[0-9]{4}.[a-zA-Z][a-zA-Z0-9]*)|(fl.[a-zA-Z][a-zA-Z0-9]*)"
@@ -274,7 +393,11 @@
 				"Text": {
 					"$ref": "#/definitions/MultilingualText"
 				}
-			}
+			},
+			"required":[
+				"Code",
+				"Text"
+			]
 		},
 		"DocumentTypeCode": {
 			"pattern": "LegalProvision|Law|Hint"
@@ -282,12 +405,6 @@
 		"LegendEntry": {
 			"type": "object",
 			"properties": {
-				"Symbol": {
-					"$ref": "#/definitions/base64Binary"
-				},
-				"SymbolRef": {
-					"$ref": "#/definitions/anyURI"
-				},
 				"LegendText": {
 					"$ref": "#/definitions/MultilingualText"
 				},
@@ -299,23 +416,48 @@
 				},
 				"Theme": {
 					"$ref": "#/definitions/Theme"
+				},
+				"SubTheme": {
+					"$ref": "#/definitions/Theme"
 				}
-			}
+			},
+			"required":[
+				"LegendText",
+				"TypeCode",
+				"TypeCodelist",
+				"Theme"
+			],
+			"oneOf":[
+				{
+					"properties": {
+						"Symbol": {
+							"$ref": "#/definitions/base64Binary"
+						}
+					},
+					"required":[
+						"Symbol"
+					]
+				}, {
+					"properties": {
+						"SymbolRef": {
+							"$ref": "#/definitions/anyURI"
+						}
+					},
+					"required":[
+						"SymbolRef"
+					]
+				}
+			]
 		},
 		"Map": {
 			"type": "object",
 			"properties": {
-				"Image": {
-					"$ref": "#/definitions/MultilingualBlob"
-				},
-				"ReferenceWMS": {
-					"$ref": "#/definitions/MultilingualUri"
-				},
 				"OtherLegend": {
 					"type": "array",
 					"items": {
 						"$ref": "#/definitions/LegendEntry"
-					}
+					},
+					"minItems": 0
 				},
 				"min": {
 					"$ref": "#/definitions/PointPropertyType"
@@ -333,7 +475,32 @@
 					"minimum": 0.000,
 					"maximum": 1.000
 				}
-			}
+			},
+			"required": [
+				"min",
+				"max"
+			],
+			"oneOf":[
+				{
+					"properties": {
+						"Image": {
+							"$ref": "#/definitions/MultilingualBlob"
+						}
+					},
+					"required": [
+						"Image"
+					]
+				}, {
+					"properties": {
+						"ReferenceWMS": {
+							"$ref": "#/definitions/MultilingualUri"
+						}
+					},
+					"required": [
+						"ReferenceWMS"
+					]
+				}
+			]
 		},
 		"Glossary": {
 			"type": "object",
@@ -344,7 +511,11 @@
 				"Content": {
 					"$ref": "#/definitions/MultilingualMText"
 				}
-			}
+			},
+			"required":[
+				"Title",
+				"Content"
+			]
 		},
 		"Document": {
 			"type": "object",
@@ -368,7 +539,8 @@
 					"type": "array",
 					"items": {
 						"$ref": "#/definitions/ArticleNumber"
-					}
+					},
+					"minItems": 0
 				},
 				"Lawstatus": {
 					"$ref": "#/definitions/Lawstatus"
@@ -381,7 +553,15 @@
 				"ResponsibleOffice": {
 					"$ref": "#/definitions/Office"
 				}
-			}
+			},
+			"required": [
+				"Type",
+				"Title",
+				"TextAtWeb",
+				"Lawstatus",
+				"Index",
+				"ResponsibleOffice"
+			]
 		},
 		"Lawstatus": {
 			"type": "object",
@@ -395,6 +575,7 @@
 			}
 		},
 		"LawstatusCode": {
+			"type": "string",
 			"enum": [
 				"inForce",
 				"changeWithPreEffect",
@@ -412,22 +593,46 @@
 		"Geometry": {
 			"type": "object",
 			"properties": {
-				"Point": {
-					"$ref": "#/definitions/PointPropertyType"
-				},
-				"Line": {
-					"$ref": "#/definitions/CurvePropertyType"
-				},
-				"Surface": {
-					"$ref": "#/definitions/SurfacePropertyType"
-				},
 				"Lawstatus": {
 					"$ref": "#/definitions/Lawstatus"
 				},
 				"MetadataOfGeographicalBaseData": {
 					"$ref": "#/definitions/anyURI"
 				}
-			}
+			},
+			"required": [
+				"Lawstatus"
+			],
+			"oneOf": [
+				{
+					"properties": {
+						"Point": {
+							"$ref": "#/definitions/PointPropertyType"
+						}
+					},
+					"required": [
+						"Point"
+					]
+				}, {
+					"properties": {
+						"Line": {
+							"$ref": "#/definitions/CurvePropertyType"
+						}
+					},
+					"required": [
+						"Line"
+					]
+				}, {
+					"properties": {
+						"Surface": {
+							"$ref": "#/definitions/SurfacePropertyType"
+						}
+					},
+					"required": [
+						"Surface"
+					]
+				}
+			]
 		},
 		"RestrictionOnLandownership": {
 			"type": "object",
@@ -447,33 +652,12 @@
 				"Lawstatus": {
 					"$ref": "#/definitions/Lawstatus"
 				},
-				"AreaShare": {
-					"$ref": "#/definitions/Area"
-				},
-				"PartInPercent": {
-					"type": "number",
-					"minimum": 0.0,
-					"maximum": 100.0
-				},
-				"LengthShare": {
-					"$ref": "#/definitions/Length"
-				},
-				"NrOfPoints": {
-					"type": "number",
-					"minimum": 0,
-					"maximum": 10000000
-				},
-				"Symbol": {
-					"$ref": "#/definitions/base64Binary"
-				},
-				"SymbolRef": {
-					"$ref": "#/definitions/anyURI"
-				},
 				"Geometry": {
 					"type": "array",
 					"items": {
 						"$ref": "#/definitions/Geometry"
-					}
+					},
+					"minItems": 1
 				},
 				"Map": {
 					"$ref": "#/definitions/Map"
@@ -482,12 +666,91 @@
 					"type": "array",
 					"items": {
 						"$ref": "#/definitions/Document"
-					}
+					},
+					"minItems": 1
 				},
 				"ResponsibleOffice": {
 					"$ref": "#/definitions/Office"
 				}
-			}
+			},
+			"required": [
+				"LegendText",
+				"Theme",
+				"TypeCode",
+				"TypeCodelist",
+				"Lawstatus",
+				"LegalProvisions",
+				"ResponsibleOffice",
+				"Geometry"
+			],
+			"allOf": [
+				{
+					"oneOf": [
+						{
+							"properties": {
+								"PartInPercent": {
+									"type": "number",
+									"minimum": 0.0,
+									"maximum": 100.0
+								},
+								"AreaShare": {
+									"$ref": "#/definitions/Area"
+								}
+							},
+							"required": [
+								"PartInPercent",
+								"AreaShare"
+							]
+						},
+						{
+							"properties": {
+								"LengthShare": {
+									"$ref": "#/definitions/Length"
+								}
+							},
+							"required": [
+								"LengthShare"
+							]
+						},
+						{
+							"properties": {
+								"NrOfPoints": {
+									"type": "number",
+									"minimum": 0,
+									"maximum": 10000000
+								}
+							},
+							"required": [
+								"NrOfPoints"
+							]
+						}
+					]
+				},
+				{
+					"oneOf": [
+						{
+							"properties": {
+								"Symbol": {
+									"$ref": "#/definitions/base64Binary"
+								}
+							},
+							"required": [
+								"Symbol"
+							]
+						},
+						{
+							"properties": {
+								"SymbolRef": {
+									"$ref": "#/definitions/anyURI"
+								}
+							},
+							"required": [
+								"SymbolRef"
+							]
+						}
+					]
+				}
+			]
 		},
 		"RealEstate_DPR": {
 			"type": "object",
@@ -547,7 +810,16 @@
 				"PlanForLandRegisterMainPage": {
 					"$ref": "#/definitions/Map"
 				}
-			}
+			},
+			"required": [
+				"Type",
+				"Canton",
+				"MunicipalityName",
+				"MunicipalityCode",
+				"LandRegistryArea",
+				"PlanForLandRegister",
+				"PlanForLandRegisterMainPage"
+			]
 		},
 		"Disclaimer": {
 			"type": "object",
@@ -558,7 +830,11 @@
 				"Content": {
 					"$ref": "#/definitions/MultilingualMText"
 				}
-			}
+			},
+			"required": [
+				"Title",
+				"Content"
+			]
 		},
 		"Office": {
 			"type": "object",
@@ -596,7 +872,10 @@
 					"type": "string",
 					"maxLength": 60
 				}
-			}
+			},
+			"required": [
+				"Name"
+			]
 		},
 		"Extract": {
 			"type": "object",
@@ -628,39 +907,9 @@
 					},
 					"minItems": 0
 				},
-				"LogoPLRCadastre": {
-					"$ref": "#/definitions/base64Binary"
-				},
-				"LogoPLRCadastreRef": {
-					"$ref": "#/definitions/anyURI"
-				},
-				"FederalLogo": {
-					"$ref": "#/definitions/base64Binary"
-				},
-				"FederalLogoRef": {
-					"$ref": "#/definitions/anyURI"
-				},
-				"CantonalLogo": {
-					"$ref": "#/definitions/base64Binary"
-				},
-				"CantonalLogoRef": {
-					"$ref": "#/definitions/anyURI"
-				},
-				"MunicipalityLogo": {
-					"$ref": "#/definitions/base64Binary"
-				},
-				"MunicipalityLogoRef": {
-					"$ref": "#/definitions/anyURI"
-				},
 				"ExtractIdentifier": {
 					"type": "string",
 					"maxLength": 50
-				},
-				"QRCode": {
-					"$ref": "#/definitions/base64Binary"
-				},
-				"QRCodeRef": {
-					"$ref": "#/definitions/anyURI"
 				},
 				"GeneralInformation": {
 					"$ref": "#/definitions/MultilingualMText"
@@ -688,7 +937,69 @@
 				"UpdateDateCS": {
 					"$ref": "#/definitions/dateTime"
 				}
-			}
+			},
+			"oneOf": [
+				{
+					"properties": {
+						"QRCode": {
+							"$ref": "#/definitions/base64Binary"
+						},
+						"LogoPLRCadastre": {
+							"$ref": "#/definitions/base64Binary"
+						},
+						"FederalLogo": {
+							"$ref": "#/definitions/base64Binary"
+						},
+						"CantonalLogo": {
+							"$ref": "#/definitions/base64Binary"
+						},
+						"MunicipalityLogo": {
+							"$ref": "#/definitions/base64Binary"
+						}
+					},
+					"required": [
+						"LogoPLRCadastre",
+						"FederalLogo",
+						"CantonalLogo",
+						"MunicipalityLogo"
+					]
+				},
+				{
+					"properties": {
+						"QRCodeRef": {
+							"$ref": "#/definitions/anyURI"
+						},
+						"LogoPLRCadastreRef": {
+							"$ref": "#/definitions/anyURI"
+						},
+						"FederalLogoRef": {
+							"$ref": "#/definitions/anyURI"
+						},
+						"CantonalLogoRef": {
+							"$ref": "#/definitions/anyURI"
+						},
+						"MunicipalityLogoRef": {
+							"$ref": "#/definitions/anyURI"
+						}
+					},
+					"required": [
+						"LogoPLRCadastreRef",
+						"FederalLogoRef",
+						"CantonalLogoRef",
+						"MunicipalityLogoRef"
+					]
+				}
+			],
+			"required": [
+				"CreationDate",
+				"ConcernedTheme",
+				"NotConcernedTheme",
+				"ThemeWithoutData",
+				"ExtractIdentifier",
+				"RealEstate",
+				"PLRCadastreAuthority",
+				"UpdateDateCS"
+			]
 		}
 	}
 }

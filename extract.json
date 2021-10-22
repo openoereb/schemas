@@ -3,31 +3,52 @@
 	"$id": "http://schemas.geo.admin.ch/V_D/OeREB/2.0/extract.json",
 	"fileVersion": "2.0.0",
 	"type": "object",
-	"anyOf": [{
-			"$ref": "#/definitions/GetExtractByIdResponse"
+	"oneOf": [{
+		"properties": {
+			"GetExtractByIdResponse": {
+				"$ref": "#/definitions/GetExtractByIdResponseType"
+			}
 		},
-		{
-			"$ref": "#/definitions/GetEGRIDResponse"
+		"required": [
+			"GetExtractByIdResponse"
+		]
+	}, {
+		"properties": {
+			"GetEGRIDResponse": {
+				"$ref": "#/definitions/GetEGRIDResponseType"
+			}
 		},
-		{
-			"$ref": "#/definitions/GetCapabilitiesResponse"
-		}
-	],
+		"required": [
+			"GetEGRIDResponse"
+		]
+	},{
+		"properties": {
+			"GetCapabilitiesResponse": {
+				"$ref": "#/definitions/GetCapabilitiesResponseType"
+			}
+		},
+		"required": [
+			"GetCapabilitiesResponse"
+		]
+	}],
 	"definitions": {
 
 		"FlavourType": {
 			"pattern": "REDUCED|SIGNED|(ch.[A-Z]{2}.[a-zA-Z][a-zA-Z0-9]*)|(fl.[a-zA-Z][a-zA-Z0-9]*)"
 		},
 
-		"GetExtractByIdResponse": {
+		"GetExtractByIdResponseType": {
 			"type": "object",
 			"properties": {
 				"extract": {
-					"$ref": "extractdata.json/definitions/Extract"
+					"$ref": "./extractdata.json#/definitions/Extract"
 				}
-			}
+			},
+			"required": [
+				"extract"
+			]
 		},
-		"GetEGRIDResponse": {
+		"GetEGRIDResponseType": {
 			"type": "array",
 			"items": {
 				"type": "object",
@@ -42,28 +63,28 @@
 						"type": "string"
 					},
 					"type": {
-						"$ref": "extractdata.json/definitions/RealEstateType"
+						"$ref": "extractdata.json#/definitions/RealEstateType"
 					},
 					"limit": {
-						"$ref": "extractdata.json/definitions/MultiSurface"
+						"$ref": "extractdata.json#/definitions/MultiSurface"
 					}
 				}
 			}
 		},
 
-		"GetCapabilitiesResponse": {
+		"GetCapabilitiesResponseType": {
 			"type": "object",
 			"properties": {
 				"topic": {
 					"type": "array",
 					"items": {
-						"$ref": "extractdata.json/definitions/Theme"
+						"$ref": "extractdata.json#/definitions/Theme"
 					}
 				},
 				"municipality": {
 					"type": "array",
 					"items": {
-						"$ref": "extractdata.json/definitions/MunicipalityCode"
+						"$ref": "extractdata.json#/definitions/MunicipalityCode"
 					}
 				},
 				"flavour": {
