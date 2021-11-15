@@ -680,8 +680,7 @@
 				"TypeCodelist",
 				"Lawstatus",
 				"LegalProvisions",
-				"ResponsibleOffice",
-				"Geometry"
+				"ResponsibleOffice"
 			],
 			"allOf": [
 				{
